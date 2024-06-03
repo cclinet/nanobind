@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15...3.27)
-project(nanobind LANGUAGES NONE)
+project(nanobind VERSION 2.0.0 LANGUAGES NONE)
 
 # ---------------------------------------------------------------------------
 # Only build tests by default if this is the top-level CMake project
@@ -62,6 +62,12 @@ if(NB_CREATE_INSTALL_RULES AND NOT CMAKE_SKIP_INSTALL_RULES)
   set(NB_INSTALL_MODULE_DIR "${NB_INSTALL_DATADIR}")
   set(NB_INSTALL_CMAKE_DIR "${NB_INSTALL_DATADIR}/cmake")
 
+  include(CMakePackageConfigHelpers)
+  write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion ARCH_INDEPENDENT)
+
   install(
     DIRECTORY include/
     DESTINATION "${NB_INSTALL_INC_DIR}"
@@ -94,6 +100,10 @@ if(NB_CREATE_INSTALL_RULES AND NOT CMAKE_SKIP_INSTALL_RULES)
     DIRECTORY cmake/
     DESTINATION "${NB_INSTALL_CMAKE_DIR}"
   )
+  install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    DESTINATION ${NB_INSTALL_CMAKE_DIR}
+)
 endif()
 
 # Return early to skip finding needless dependencies if the user only wishes to
